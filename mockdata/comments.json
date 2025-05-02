@@ -1,0 +1,53 @@
+{
+  "comments": [
+    {
+      "id": 1001,
+      "post_id": 1,
+      "date": "2025-04-03T11:00:00Z",
+      "text": "Terrible service, I dont recommend this brand",
+      "user": "naturefan"
+    },
+    {
+      "id": 1002,
+      "post_id": 2,
+      "date": "2025-04-07T19:00:00Z",
+      "text": "Amazing launch, congrats!",
+      "user": "techguru"
+    },
+    {
+      "id": 1003,
+      "post_id": 2,
+      "date": "2025-04-07T19:05:00Z",
+      "text": "Hate this brand",
+      "user": "earlyadopter"
+    },
+    {
+      "id": 1004,
+      "post_id": 4,
+      "date": "2025-04-15T15:00:00Z",
+      "text": "Hope I win the giveaway!",
+      "user": "contestlover"
+    },
+    {
+      "id": 1005,
+      "post_id": 4,
+      "date": "2025-04-15T15:10:00Z",
+      "text": "Great idea, thanks for the chance.",
+      "user": "luckyuser"
+    },
+    {
+      "id": 1006,
+      "post_id": 5,
+      "date": "2025-04-20T10:00:00Z",
+      "text": "These tips are super helpful.",
+      "user": "successseeker"
+    },
+    {
+      "id": 1007,
+      "post_id": 6,
+      "date": "2025-04-25T20:00:00Z",
+      "text": "These are liars, they charged my crad but the service was not delivered",
+      "user": "feedbackfan"
+    }
+  ]
+}

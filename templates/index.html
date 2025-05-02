@@ -1,0 +1,261 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <div class="bg-white rounded-lg shadow-lg p-6 mb-8">
+
+
+        <!-- Важные инсайты Section -->
+<div class="mb-8">
+    <p class="mb-4 text-gray-600 text-base">
+      Эта страница демонстрирует работу аналитики и рекомендаций для Instagram-аккаунта. Все данные, графики и инсайты сгенерированы на основе mock данных для вымышленного бренда <b>Mybrand</b>.
+    </p>
+    <h2 class="text-xl font-bold mb-4 text-gray-800 flex items-center">
+        <svg width="22" height="22" class="inline-block mr-2 text-blue-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M12 8v.01"/></svg>
+        Рекомендуемые действия
+    </h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {% for insight in insights %}
+        <div class="rounded-lg shadow border p-3 bg-white flex flex-col space-y-2">
+            <div class="flex items-center justify-between">
+                <span class="inline-flex items-center px-2 py-1 text-xs font-bold rounded-full
+                    {% if insight.priority == 'CRITICAL' %}bg-red-100 text-red-700 border border-red-300
+                    {% elif insight.priority == 'IMPORTANT' %}bg-yellow-100 text-yellow-800 border border-yellow-300
+                    {% else %}bg-green-100 text-green-800 border border-green-300{% endif %}">
+                    {% if insight.priority == 'CRITICAL' %}
+                        <svg width="16" height="16" class="inline-block mr-1 text-red-500" fill="currentColor" viewBox="0 0 20 20"><path d="M18 10A8 8 0 11 2 10a8 8 0 0116 0zm-7-4a1 1 0 112 0v3a1 1 0 11-2 0V6zm1 8a1 1 0 100-2 1 1 0 000 2z"/></svg>
+                    {% elif insight.priority == 'IMPORTANT' %}
+                        <svg width="16" height="16" class="inline-block mr-1 text-yellow-500" fill="currentColor" viewBox="0 0 20 20"><path d="M8.257 3.099c.366-.446.957-.538 1.403-.172l.094.083 6.516 6.517a1 1 0 01.083 1.32l-.083.094-6.517 6.517a1 1 0 01-1.497-1.32l.083-.094L13.584 10 8.257 4.672a1 1 0 01-.083-1.32z"/></svg>
+                    {% else %}
+                        <svg width="16" height="16" class="inline-block mr-1 text-green-500" fill="currentColor" viewBox="0 0 20 20"><path d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.707a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"/></svg>
+                    {% endif %}
+                    {{ insight.priority }}
+                </span>
+                <div class="flex flex-row items-center gap-x-1 ml-2">
+                    {% for i in range(insight.impact_score|int) %}
+                    <svg width="16" height="16" class="text-yellow-400 fill-current" viewBox="0 0 20 20">
+                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                    </svg>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="text-base font-semibold text-gray-900">{{ insight.insight }}</div>
+            <div class="text-gray-700"><span class="font-bold text-blue-700">Рекомендация:</span> {{ insight.action }}</div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- <section class="account-info-card">
+  <div class="profile-pic-wrapper">
+    <img src="{{ account.profile_picture_url }}" alt="Profile">
+  </div>
+  <div class="account-meta">
+    <h2>{{ account.full_name }}</h2>
+    <span class="username">@{{ account.username }}</span>
+    <p class="bio">{{ account.bio }}</p>
+    <span class="category">{{ account.category }}</span>
+  </div>
+</section>
+<div class="section-divider"></div> -->
+<!-- Анализ тональности Section -->
+<div class="sentiment-section" style="margin:2em 0; padding:1.5em 2em; background:#f7f9fa; border-radius:10px;">
+  <h3 style="color:#22223b;">Анализ тональности</h3>
+  <div style="display:flex; flex-wrap:wrap; gap:2em;">
+    <div style="flex:1 1 250px; min-width:220px;">
+      <h4 style="color:#F43F5E; margin-bottom:0.5em;">Комментарии:</h4>
+      <div>Положительные: <b>{{ (comment_sentiment.distribution.POSITIVE * 100) | round(1) if comment_sentiment.distribution.POSITIVE is defined else 0 }}%</b></div>
+      <div>Отрицательные: <b>{{ (comment_sentiment.distribution.NEGATIVE * 100) | round(1) if comment_sentiment.distribution.NEGATIVE is defined else 0 }}%</b></div>
+      <div>Средний балл: <b>{{ comment_sentiment.average | round(2) }}</b></div>
+      <div style="height:24px; margin-top:0.5em; background:#fff; border-radius:6px; overflow:hidden; box-shadow:0 1px 4px #22223b11;">
+  <div id="comment-bar-positive" style="display:inline-block; height:100%; background:#4ade80; transition:width 0.4s;"></div><div id="comment-bar-negative" style="display:inline-block; height:100%; background:#F43F5E; transition:width 0.4s;"></div>
+</div>
+    </div>
+    <div style="flex:1 1 250px; min-width:220px;">
+      <h4 style="color:#22223b; margin-bottom:0.5em;">Посты:</h4>
+      <div>Положительные: <b>{{ (post_sentiment.distribution.POSITIVE * 100) | round(1) if post_sentiment.distribution.POSITIVE is defined else 0 }}%</b></div>
+      <div>Отрицательные: <b>{{ (post_sentiment.distribution.NEGATIVE * 100) | round(1) if post_sentiment.distribution.NEGATIVE is defined else 0 }}%</b></div>
+      <div>Средний балл: <b>{{ post_sentiment.average | round(2) }}</b></div>
+      <div style="height:24px; margin-top:0.5em; background:#fff; border-radius:6px; overflow:hidden; box-shadow:0 1px 4px #22223b11;">
+  <div id="post-bar-positive" style="display:inline-block; height:100%; background:#4ade80; transition:width 0.4s;"></div><div id="post-bar-negative" style="display:inline-block; height:100%; background:#F43F5E; transition:width 0.4s;"></div>
+</div>
+    </div>
+  </div>
+</div>
+<script>
+  // Set sentiment bar widths via JS for linter compatibility
+  window.addEventListener('DOMContentLoaded', function() {
+    var cbp = document.getElementById('comment-bar-positive');
+    var cbn = document.getElementById('comment-bar-negative');
+    var pbp = document.getElementById('post-bar-positive');
+    var pbn = document.getElementById('post-bar-negative');
+    if (cbp) cbp.style.width = '{{ (comment_sentiment.distribution.POSITIVE * 100) | round(0) if comment_sentiment.distribution.POSITIVE is defined else 0 }}%';
+    if (cbn) cbn.style.width = '{{ (comment_sentiment.distribution.NEGATIVE * 100) | round(0) if comment_sentiment.distribution.NEGATIVE is defined else 0 }}%';
+    if (pbp) pbp.style.width = '{{ (post_sentiment.distribution.POSITIVE * 100) | round(0) if post_sentiment.distribution.POSITIVE is defined else 0 }}%';
+    if (pbn) pbn.style.width = '{{ (post_sentiment.distribution.NEGATIVE * 100) | round(0) if post_sentiment.distribution.NEGATIVE is defined else 0 }}%';
+  });
+</script>
+
+<div class="analytics-summary">
+  <h3>Сводка по аналитике аккаунта</h3>
+  <ul>
+    <li><b>Период:</b> {{ basic_stats.start_date }} — {{ basic_stats.end_date }} ({{ basic_stats.period_days }} days)</li>
+    <li><b>Подписчиков в начале:</b> {{ basic_stats.start_followers }}</li>
+    <li><b>Подписчиков в конце:</b> {{ basic_stats.end_followers }}</li>
+    <li><b>Общий прирост:</b> {{ basic_stats.total_growth }} ({{ basic_stats.growth_percent }}%)</li>
+    <li><b>Средний дневной прирост:</b> {{ basic_stats.avg_daily_growth }}</li>
+  </ul>
+  <ul>
+    <li><b>Лучший прирост за 7 дней:</b> {{ best_growth_period.best_growth_followers }} ({{ best_growth_period.best_growth_period_start }} — {{ best_growth_period.best_growth_period_end }})</li>
+    <li><b>Лучший день недели:</b> {{ weekday_performance.best_day }} (+{{ weekday_performance.best_day_growth }})</li>
+    <li><b>Худший день недели:</b> {{ weekday_performance.worst_day }} ({{ weekday_performance.worst_day_growth }})</li>
+  </ul>
+  <ul>
+    <li><b>Текущий тренд:</b> {{ trend.trend_description }} ({{ trend.weekly_slope }} per week)</li>
+  </ul>
+</div>
+
+<!-- {% if anomalies.anomaly_count > 0 %}
+  <div class="anomalies">
+    <h4>Detected Anomalies</h4>
+    <ul>
+      {% for anomaly in chartAnomalies %}
+        <li>
+          <b>{{ anomaly.date }}</b> — {{ anomaly.type }} of {{ anomaly.followers_change }} ({{ anomaly.percent_change }}%)
+        </li>
+      {% endfor %}
+    </ul>
+  </div>
+{% endif %} -->
+
+<div class="bg-white rounded-lg shadow-lg p-6 mb-8" style="max-width:900px; margin:32px auto 0 auto;">
+  <div class="analytics-chart-area compact" style="padding:0; display:flex; justify-content:center; align-items:center;">
+    <div id="chart" style="width:100%;max-width:820px;min-height:400px;height:400px;"></div>
+  </div>
+</div>
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+<script type="application/json" id="chart-data-json">{{ chart_data | tojson }}</script>
+<script type="application/json" id="anomalies-json">{{ anomalies.anomalies | tojson }}</script>
+<script type="application/json" id="best-growth-period-json">{{ best_growth_period | tojson }}</script>
+<script type="application/json" id="trend-json">{{ trend | tojson }}</script>
+<script type="application/json" id="weekday-performance-json">{{ weekday_performance | tojson }}</script>
+<script>
+  // Parse chart data from JSON script tags for linter compatibility
+  const chartData = JSON.parse(document.getElementById('chart-data-json').textContent);
+  const chartAnomalies = JSON.parse(document.getElementById('anomalies-json').textContent);
+  const chartBestGrowthPeriod = JSON.parse(document.getElementById('best-growth-period-json').textContent);
+  const chartTrend = JSON.parse(document.getElementById('trend-json').textContent);
+  const chartWeekdayPerformance = JSON.parse(document.getElementById('weekday-performance-json').textContent);
+
+  const dates = chartData.map(d => d.date);
+  const followers = chartData.map(d => d.followers);
+  const dailyGrowth = chartData.map(d => d.daily_growth);
+  const rollingAvg = chartData.map(d => d.rolling_avg);
+
+  // Anomaly markers
+  const anomalyDates = chartAnomalies.map(a => a.date);
+  const anomalyFollowers = anomalyDates.map(date => {
+    const idx = dates.indexOf(date);
+    return idx !== -1 ? followers[idx] : null;
+  });
+  const anomalyTexts = chartAnomalies.map(a => `${a.type} of ${a.followers_change} (${a.percent_change}%)`);
+
+  // Forecast line
+  const forecast = chartTrend.forecast || [];
+  const forecastDates = forecast.map(f => f.date);
+  const forecastFollowers = forecast.map(f => f.predicted_followers);
+
+  // Best growth period highlight
+  const bestStart = chartBestGrowthPeriod.best_growth_period_start;
+  const bestEnd = chartBestGrowthPeriod.best_growth_period_end;
+  const highlightIndices = dates.map((d, i) => (d >= bestStart && d <= bestEnd) ? i : null).filter(i => i !== null);
+  const highlightX = highlightIndices.map(i => dates[i]);
+  const highlightY = highlightIndices.map(i => followers[i]);
+
+  const traces = [
+    {
+      x: dates,
+      y: followers,
+      name: 'Followers',
+      type: 'scatter',
+      mode: 'lines+markers',
+      line: { color: '#22223b', width: 2 },
+      marker: { symbol: 'circle', size: 6 }
+    },
+    {
+      x: dates,
+      y: rollingAvg,
+      name: 'Rolling Avg (7d)',
+      type: 'scatter',
+      mode: 'lines',
+      line: { color: '#F43F5E', width: 2, dash: 'dot' }
+    },
+    {
+      x: dates,
+      y: dailyGrowth,
+      name: 'Daily Growth',
+      type: 'bar',
+      marker: { color: '#a3bffa', opacity: 0.5 }
+    },
+    {
+      x: anomalyDates,
+      y: anomalyFollowers,
+      name: 'Anomalies',
+      mode: 'markers+text',
+      type: 'scatter',
+      marker: { color: '#F43F5E', size: 12, symbol: 'diamond' },
+      text: anomalyTexts,
+      textposition: 'top center',
+      hoverinfo: 'text'
+    },
+    // Forecast line
+    {
+      x: [dates[dates.length-1], ...forecastDates],
+      y: [followers[followers.length-1], ...forecastFollowers],
+      name: 'Forecast (7d)',
+      type: 'scatter',
+      mode: 'lines+markers',
+      line: { color: '#F43F5E', width: 2, dash: 'dash' },
+      marker: { symbol: 'circle-open', size: 6 },
+      visible: forecastDates.length > 0
+    },
+    // Highlight best growth period
+    {
+      x: highlightX,
+      y: highlightY,
+      name: 'Best 7d Growth',
+      type: 'scatter',
+      mode: 'lines',
+      line: { color: '#fbbf24', width: 8 },
+      opacity: 0.2,
+      hoverinfo: 'skip',
+      showlegend: true
+    }
+  ];
+
+  const layout = {
+    title: {
+      text: 'Динамика подписчиков',
+      y: 0.92,
+      x: 0.5,
+      xanchor: 'center',
+      yanchor: 'top',
+      font: { size: 22, color: '#22223b', family: 'inherit', weight: 'bold' }
+    },
+    xaxis: { title: 'Date' },
+    yaxis: { title: 'Followers / Growth' },
+    legend: { orientation: 'h', x: 0, y: 1.12 },
+    margin: { t: 80, l: 40, r: 20, b: 40 },
+    plot_bgcolor: 'white',
+    paper_bgcolor: 'white'
+  };
+
+  // Add subtle border radius and shadow to chart container
+  document.getElementById('chart').style.borderRadius = '14px';
+  document.getElementById('chart').style.boxShadow = '0 2px 12px #22223b11';
+  document.getElementById('chart').style.background = 'white';
+
+  Plotly.newPlot('chart', traces, layout, {responsive: true});
+</script>
+
+
+{% endblock %}

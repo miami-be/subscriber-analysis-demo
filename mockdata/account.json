@@ -1,0 +1,12 @@
+{
+  "accounts": [
+    {
+      "id": 1,
+      "username": "mybrand",
+      "category": "business",
+      "full_name": "My Brand",
+      "profile_picture_url": "https://example.com/profile.jpg",
+      "bio": "Official account of My Brand. Innovation, community, and quality."
+    }
+  ]
+}
