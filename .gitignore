@@ -1,0 +1,30 @@
+# Python
+__pycache__/
+*.py[cod]
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+.eggs/
+
+# macOS
+.DS_Store
+
+# Environments
+.env
+.venv
+venv/
+ENV/
+
+# VSCode
+.vscode/
+
+# Logs
+*.log
+
+# Node
+node_modules/
+
+# Netlify
+.netlify/
