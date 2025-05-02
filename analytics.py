@@ -272,18 +272,22 @@ class InstagramAnalytics:
         return grouped.to_dict(orient='records')
 
     def analyze_comment_sentiment(self, comments):
-        """Returns sentiment distribution and average score for comments."""
-        from transformers import pipeline
+        """Returns sentiment distribution and average score for comments using VADER sentiment analysis."""
+        from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
         import numpy as np
         if not comments:
             return {"distribution": {}, "average": 0}
-        classifier = pipeline("sentiment-analysis", model="distilbert-base-uncased-finetuned-sst-2-english")
-        results = classifier([c['text'] for c in comments])
+        analyzer = SentimentIntensityAnalyzer()
         distr = {"POSITIVE": 0, "NEGATIVE": 0}
         scores = []
-        for r in results:
-            distr[r['label']] = distr.get(r['label'], 0) + 1
-            scores.append(r['score'] if r['label'] == "POSITIVE" else -r['score'])
+        for c in comments:
+            score = analyzer.polarity_scores(c['text'])['compound']
+            if score >= 0.05:
+                distr["POSITIVE"] += 1
+                scores.append(score)
+            elif score <= -0.05:
+                distr["NEGATIVE"] += 1
+                scores.append(score)
         total = sum(distr.values())
         if total:
             for k in distr:
@@ -292,21 +296,25 @@ class InstagramAnalytics:
         return {"distribution": distr, "average": avg_score}
 
     def analyze_post_sentiment(self):
-        """Returns sentiment distribution and average score for post captions."""
+        """Returns sentiment distribution and average score for post captions using VADER sentiment analysis."""
         if self.posts_df is None or self.posts_df.empty:
             return {"distribution": {}, "average": 0}
-        from transformers import pipeline
+        from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
         import numpy as np
-        classifier = pipeline("sentiment-analysis", model="distilbert-base-uncased-finetuned-sst-2-english")
+        analyzer = SentimentIntensityAnalyzer()
         captions = self.posts_df['caption'].dropna().tolist()
         if not captions:
             return {"distribution": {}, "average": 0}
-        results = classifier(captions)
         distr = {"POSITIVE": 0, "NEGATIVE": 0}
         scores = []
-        for r in results:
-            distr[r['label']] = distr.get(r['label'], 0) + 1
-            scores.append(r['score'] if r['label'] == "POSITIVE" else -r['score'])
+        for text in captions:
+            score = analyzer.polarity_scores(text)['compound']
+            if score >= 0.05:
+                distr["POSITIVE"] += 1
+                scores.append(score)
+            elif score <= -0.05:
+                distr["NEGATIVE"] += 1
+                scores.append(score)
         total = sum(distr.values())
         if total:
             for k in distr:
